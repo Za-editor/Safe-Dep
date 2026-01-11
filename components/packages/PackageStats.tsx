@@ -1,4 +1,13 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { Package, AlertTriangle, Shield, FileText, Box } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+interface PackageStatsProps {
+  version: string;
+  vulnerabilities: number;
+  openssfScore: number;
+  license: string;
+  ecosystem: string;
+}
 
 export function PackageStats({
   version,
@@ -6,31 +15,66 @@ export function PackageStats({
   openssfScore,
   license,
   ecosystem,
-}: {
-  version: string;
-  vulnerabilities: number;
-  openssfScore: number;
-  license: string;
-  ecosystem: string;
-}) {
+}: PackageStatsProps) {
   const stats = [
-    { label: "Version", value: version },
-    { label: "Vulnerabilities", value: vulnerabilities },
-    { label: "OpenSSF Scorecard", value: `${openssfScore}/10` },
-    { label: "License", value: license },
-    { label: "Ecosystem", value: ecosystem },
+    {
+      label: "Version",
+      value: version,
+      icon: Package,
+      iconColor: "text-blue-500",
+      bgColor: "bg-blue-50",
+    },
+    {
+      label: "Vulnerabilities",
+      value: vulnerabilities.toString(),
+      icon: AlertTriangle,
+      iconColor: "text-orange-500",
+      bgColor: "bg-orange-50",
+    },
+    {
+      label: "OpenSSF Scorecard",
+      value: `${openssfScore}/10`,
+      icon: Shield,
+      iconColor: "text-teal-500",
+      bgColor: "bg-teal-50",
+    },
+    {
+      label: "License",
+      value: license,
+      icon: FileText,
+      iconColor: "text-purple-500",
+      bgColor: "bg-purple-50",
+    },
+    {
+      label: "Ecosystem",
+      value: ecosystem,
+      icon: Box,
+      iconColor: "text-green-500",
+      bgColor: "bg-green-50",
+    },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-      {stats.map((stat) => (
-        <Card key={stat.label}>
-          <CardContent className="py-4 text-center">
-            <p className="text-sm text-muted-foreground">{stat.label}</p>
-            <p className="text-lg font-semibold">{stat.value}</p>
-          </CardContent>
-        </Card>
-      ))}
+    <div className="grid grid-cols-2 md:grid-cols-5 gap-4 py-4">
+      {stats.map((stat) => {
+        const Icon = stat.icon;
+        return (
+          <div
+            key={stat.label}
+            className="flex flex-col items-start gap-2 p-4 bg-gray-50 rounded-lg border border-gray-200"
+          >
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <div className={cn("p-1.5 rounded", stat.bgColor)}>
+                <Icon className={cn("h-4 w-4", stat.iconColor)} />
+              </div>
+              <span>{stat.label}</span>
+            </div>
+            <div className="text-2xl font-semibold text-gray-900">
+              {stat.value}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
